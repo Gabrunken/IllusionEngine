@@ -275,6 +275,7 @@
     <ClCompile Include="Libraries\glm\detail\glm.cpp" />
     <ClCompile Include="Libraries\STB_Image\stb_image.cpp" />
     <ClCompile Include="Source Code\Main.cpp" />
+    <ClCompile Include="Source Code\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\glm\common.hpp" />
@@ -559,6 +560,7 @@
     <ClInclude Include="Libraries\glm\vec3.hpp" />
     <ClInclude Include="Libraries\glm\vec4.hpp" />
     <ClInclude Include="Libraries\glm\vector_relational.hpp" />
+    <ClInclude Include="Source Code\Window\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
