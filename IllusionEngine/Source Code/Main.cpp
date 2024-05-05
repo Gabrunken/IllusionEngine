@@ -22,18 +22,81 @@
 #include "Window/Window.hpp"
 #include <glm/glm.hpp>
 
+void Print(const char* message)
+{
+	std::cout << message << std::endl;
+}
+
+void CloseWindow(GLFWwindow* window)
+{
+	glfwHideWindow(window);
+}
+GLFWwindow* secondaryWindow;
+
+std::vector<GLFWwindow*> windows;
+
+void KeyboardInput(GLFWwindow* window, int key, int scanCode, int action, int mods)
+{
+	if (action == GLFW_PRESS && key == GLFW_KEY_W)
+	{
+		glfwShowWindow(secondaryWindow);
+	}
+}
+
+GLFWwindow* CreateWindow(const char* title, int width, int height)
+{
+	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+
+	if (!window)
+	{
+		Print("Failed to create window.");
+		return nullptr;
+	}
+
+	windows.push_back(window);
+	return window;
+}
+
 int main()
 {
-	int8_t mainWindow = Window::Create("Illusion", 1280, 720);
-	int8_t secondWindow = Window::Create("Second", 400, 400);
-	//int8_t thirdWindow = Window::Create("Third", 640, 480);
-
-	while (Window::IsValid(mainWindow) || Window::IsValid(secondWindow))
+	if (!glfwInit())
 	{
-		Window::Update(mainWindow);
-		Window::Update(secondWindow);
-
+		Print("GLFW failed to init.");
+		return 1;
 	}
+
+	GLFWwindow* mainWindow = CreateWindow("Main", 400, 400);
+
+	if (!mainWindow)
+	{
+		Print("Failed to create main window.");
+		return 1;
+	}
+
+	secondaryWindow = CreateWindow("Secondary", 200, 200);
+
+	if (!secondaryWindow)
+	{
+		Print("Failed to create secondary window.");
+		return 1;
+	}
+
+	glfwSetWindowCloseCallback(secondaryWindow, CloseWindow);
+	glfwSetKeyCallback(mainWindow, KeyboardInput);
+
+	while (!glfwWindowShouldClose(mainWindow))
+	{
+		glfwPollEvents();
+		glfwSwapBuffers(mainWindow);
+
+		for (int i = 1; i < windows.size(); i++)
+		{
+			if (!glfwGetWindowAttrib(windows[i], GLFW_VISIBLE)) { continue; }
+			glfwSwapBuffers(windows[i]);
+		}
+	}
+
+	glfwTerminate();
 
 	return 0;
 }
